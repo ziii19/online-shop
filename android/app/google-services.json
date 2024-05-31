@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "843647743531",
+    "project_id": "online-shop-f7441",
+    "storage_bucket": "online-shop-f7441.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:843647743531:android:60ae74101a829bd06d5c6e",
+        "android_client_info": {
+          "package_name": "com.example.online_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAspUai0gSxUHUt7ZBfYjNNFKcDBUTLsA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
