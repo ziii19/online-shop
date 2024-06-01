@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:online_shop/data/repositories/user_repo.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:online_shop/domain/entities/result.dart';
 import 'package:online_shop/domain/entities/user.dart';
+import 'package:path/path.dart';
 
 class FirebaseUserRepo implements UserRepository {
   final FirebaseFirestore _firebaseFirestore;
@@ -57,8 +59,33 @@ class FirebaseUserRepo implements UserRepository {
   }
 
   @override
-  Future<Result<User>> uploadPP({required User user, required File imageFile}) {
-    // TODO: implement uploadPP
-    throw UnimplementedError();
+  Future<Result<User>> uploadPP(
+      {required User user, required File imageFile}) async {
+    String filename = basename(imageFile.path);
+
+    Reference reference = FirebaseStorage.instance.ref().child(filename);
+
+    try {
+      if (user.photoProfile != null && user.photoProfile!.isNotEmpty) {
+        Reference oldImage =
+            FirebaseStorage.instance.refFromURL(user.photoProfile!);
+        oldImage.delete();
+      }
+
+      await reference.putFile(imageFile);
+
+      String downloadUrl = await reference.getDownloadURL();
+
+      var updateResult =
+          await updateUser(user: user.copyWith(photoProfile: downloadUrl));
+
+      if (updateResult.isSuccess) {
+        return Result.success(updateResult.resultValue!);
+      } else {
+        return Result.failed(updateResult.errorMessage!);
+      }
+    } catch (e) {
+      return const Result.failed('Failed to upload profile picture');
+    }
   }
 }

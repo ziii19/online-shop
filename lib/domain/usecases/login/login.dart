@@ -6,22 +6,17 @@ import 'package:online_shop/domain/usecases/usecase.dart';
 import '../../entities/entities.dart';
 
 class Login implements UseCase<Result<User>, LoginParams> {
-  final Authentication _authentication;
-  final UserRepository _userRepository;
+  final Authentication authentication;
+  final UserRepository userRepository;
 
-  Login(
-      {required Authentication authentication,
-      required UserRepository userRepository})
-      : _authentication = authentication,
-        _userRepository = userRepository;
+  Login({required this.authentication, required this.userRepository});
   @override
   Future<Result<User>> call(LoginParams params) async {
-    var idResult = await _authentication.login(
+    var idResult = await authentication.login(
         email: params.email, password: params.password);
 
-    if (idResult.isSuccess) {
-      var userResult =
-          await _userRepository.getUser(uid: idResult.resultValue!);
+    if (idResult is Success) {
+      var userResult = await userRepository.getUser(uid: idResult.resultValue!);
 
       return switch (userResult) {
         Success(value: final user) => Result.success(user),

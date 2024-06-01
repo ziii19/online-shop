@@ -9,13 +9,15 @@ class FirebaseAuth implements Authentication {
   FirebaseAuth({firebase_auth.FirebaseAuth? firebaseAuth})
       : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
   @override
+  String? getLoggedInUserId() => _firebaseAuth.currentUser?.uid;
+
+  @override
   Future<Result<String>> login(
       {required String email, required String password}) async {
     try {
-      var userLogin = await _firebaseAuth.signInWithEmailAndPassword(
+      var userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-
-      return Result.success(userLogin.user!.uid);
+      return Result.success(userCredential.user!.uid);
     } on firebase_auth.FirebaseAuthException catch (e) {
       return Result.failed(e.message!);
     }
@@ -25,10 +27,10 @@ class FirebaseAuth implements Authentication {
   Future<Result<void>> logout() async {
     await _firebaseAuth.signOut();
 
-    if (_firebaseAuth.currentUser != null) {
+    if (_firebaseAuth.currentUser == null) {
       return const Result.success(null);
     } else {
-      return const Result.failed('Failed to Sign Out');
+      return const Result.failed('failed to Sign Out');
     }
   }
 
@@ -36,15 +38,11 @@ class FirebaseAuth implements Authentication {
   Future<Result<String>> register(
       {required String email, required String password}) async {
     try {
-      var userRegister = await _firebaseAuth.createUserWithEmailAndPassword(
+      var userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
-
-      return Result.success(userRegister.user!.uid);
+      return Result.success(userCredential.user!.uid);
     } on firebase_auth.FirebaseAuthException catch (e) {
-      return Result.failed(e.message!);
+      return Result.failed('${e.message}');
     }
   }
-
-  @override
-  String? getLoggedInUserId() => _firebaseAuth.currentUser?.uid;
 }

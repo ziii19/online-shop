@@ -12,7 +12,7 @@ class EditProduct implements UseCase<Result<void>, EditProductParam> {
     var result = await _productRepo.editProduct(product: params.product);
 
     return switch (result) {
-      Success(value: _) => Result.success(null),
+      Success(value: _) => const Result.success(null),
       Failed(:final message) => Result.failed(message)
     };
   }

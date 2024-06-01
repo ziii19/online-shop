@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/entities/entities.dart';
@@ -32,9 +35,8 @@ class UserData extends _$UserData {
     switch (result) {
       case Success(value: final user):
         state = AsyncData(user);
-
       case Failed(:final message):
-        state = AsyncError(message, StackTrace.current);
+        state = AsyncError(FlutterError(message), StackTrace.current);
         state = const AsyncData(null);
     }
   }
@@ -43,24 +45,53 @@ class UserData extends _$UserData {
     required String name,
     required String email,
     required String password,
-    String? photoProfile,
   }) async {
     state = const AsyncLoading();
 
     Register register = await ref.read(registerProvider);
 
-    var result =
-        register(RegisterParam(name: name, email: email, password: password));
+    var result = await register(
+        RegisterParam(name: name, email: email, password: password));
 
     switch (result) {
       case Success(value: final user):
         state = AsyncData(user);
 
+        break;
       case Failed(:final message):
-        state = AsyncError(message, StackTrace.current);
+        state = AsyncError(FlutterError(message), StackTrace.current);
         state = const AsyncData(null);
+    }
+  }
 
-  
+  Future<Result<User>> uploadPP(
+      {required User user, required File imageFile}) async {
+    UploadPhotoProfile uploadPP = ref.read(uploadPhotoProfileProvider);
+
+    return await uploadPP(UploadPPParam(imageFile: imageFile, user: user));
+  }
+
+  Future<void> refreshUserData() async {
+    GetLoggedInUser getLoggedInUser = ref.read(getLoggedInUserProvider);
+
+    var result = await getLoggedInUser(null);
+
+    if (result case Success(value: final user)) {
+      state = AsyncData(user);
+    }
+  }
+
+  Future<void> logout() async {
+    Logout logout = ref.read(logoutProvider);
+
+    var result = await logout(null);
+
+    switch (result) {
+      case Success(value: _):
+        state = const AsyncData(null);
+      case Failed(:final message):
+        state = AsyncError(FlutterError(message), StackTrace.current);
+        state = AsyncData(state.valueOrNull);
     }
   }
 }

@@ -86,4 +86,23 @@ class FirebaseProdukRepo implements ProductRepo {
       return const Result.failed('Failed to get user product');
     }
   }
+
+  @override
+  Future<Result<List<Product>>> getAllProduct() async {
+    try {
+      CollectionReference<Map<String, dynamic>> reference =
+          _firebaseFirestore.collection('product');
+
+      var result = await reference.get();
+
+      if (result.docs.isNotEmpty) {
+        return Result.success(
+            result.docs.map((e) => Product.fromJson(e.data())).toList());
+      } else {
+        return const Result.success([]);
+      }
+    } catch (e) {
+      return const Result.failed('Failed to get product');
+    }
+  }
 }
