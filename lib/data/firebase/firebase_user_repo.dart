@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:online_shop/data/repositories/user_repo.dart';
+import '../repositories/user_repo.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:online_shop/domain/entities/result.dart';
-import 'package:online_shop/domain/entities/user.dart';
+import '../../domain/entities/result.dart';
+import '../../domain/entities/user.dart';
 import 'package:path/path.dart';
 
 class FirebaseUserRepo implements UserRepository {
@@ -17,6 +17,7 @@ class FirebaseUserRepo implements UserRepository {
       {required String uid,
       required String email,
       required String name,
+      int product = 0,
       String? photoProfile}) async {
     CollectionReference<Map<String, dynamic>> reference =
         _firebaseFirestore.collection('users');
@@ -25,6 +26,7 @@ class FirebaseUserRepo implements UserRepository {
       'uid': uid,
       'email': email,
       'name': name,
+      'product': product,
       'photoProfile': photoProfile,
     });
 
@@ -53,9 +55,28 @@ class FirebaseUserRepo implements UserRepository {
   }
 
   @override
-  Future<Result<User>> updateUser({required User user}) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
+  Future<Result<User>> updateUser({required User user}) async {
+ try {
+      DocumentReference<Map<String, dynamic>> users =
+          _firebaseFirestore.doc('users/${user.uid}');
+      await users.update(user.toJson());
+
+      DocumentSnapshot<Map<String, dynamic>> result = await users.get();
+  
+      if (result.exists) {
+        User updateUser = User.fromJson(result.data()!);
+
+        if (updateUser == user) {
+          return Result.success(updateUser);
+        } else {
+          return const Result.failed('Failed to update user data');
+        }
+      } else {
+        return const Result.failed('Failed to update user data');
+      }
+    } on FirebaseException catch (e) {
+      return Result.failed(e.message ?? 'Failed to update user data');
+    }
   }
 
   @override

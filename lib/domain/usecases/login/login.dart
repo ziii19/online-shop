@@ -1,7 +1,7 @@
-import 'package:online_shop/data/repositories/authentication.dart';
-import 'package:online_shop/data/repositories/user_repo.dart';
-import 'package:online_shop/domain/usecases/login/login_params.dart';
-import 'package:online_shop/domain/usecases/usecase.dart';
+import '../../../data/repositories/authentication.dart';
+import '../../../data/repositories/user_repo.dart';
+import 'login_params.dart';
+import '../usecase.dart';
 
 import '../../entities/entities.dart';
 

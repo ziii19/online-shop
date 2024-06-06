@@ -1,12 +1,13 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:online_shop/firebase_options.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:online_shop/presentation/misc/constan.dart';
-import 'package:online_shop/presentation/misc/theme.dart';
-import 'package:online_shop/presentation/pages/login/login.dart';
-import 'package:online_shop/presentation/pages/register_page.dart/register.dart';
-import 'package:online_shop/presentation/provider/router/router_provider.dart';
+
+import 'firebase_options.dart';
+import 'presentation/misc/constan.dart';
+import 'presentation/misc/theme.dart';
+import 'presentation/provider/router/router_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,9 +15,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const ProviderScope(
-    child: MainApp(),
-  ));
+  await FirebaseAppCheck.instance.activate(
+    androidProvider: AndroidProvider.playIntegrity,
+  );
+  runApp(const ProviderScope(child: MainApp()));
 }
 
 class MainApp extends ConsumerWidget {
@@ -24,6 +26,11 @@ class MainApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MaterialApp.router(
       theme: LightTheme(scaffold).theme,
       debugShowCheckedModeBanner: false,

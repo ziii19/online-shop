@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:online_shop/presentation/misc/dimens.dart';
-import 'package:online_shop/presentation/widgets/text_field.dart';
+import 'package:online_shop/presentation/methods/int.dart';
+import 'package:online_shop/presentation/provider/produk_data/produk_provider.dart';
+import 'package:online_shop/presentation/provider/router/router_provider.dart';
+import '../../../domain/entities/product.dart';
+import '../../misc/constan.dart';
+import '../../misc/dimens.dart';
+
+part 'sections/produk_item.dart';
 
 class ShopPage extends ConsumerStatefulWidget {
   const ShopPage({super.key});
+
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ShopPageState();
+  // ignore: library_private_types_in_public_api
+  _ShopPageState createState() => _ShopPageState();
 }
 
 class _ShopPageState extends ConsumerState<ShopPage> {
+  TextEditingController searchController = TextEditingController();
+  String searchQuery = '';
+
   @override
   Widget build(BuildContext context) {
+    final products = ref.watch(produkDataProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -22,16 +35,35 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                 height: 50,
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(Dimens.dp16),
-              child: RegularTextInput(
-                hintText: 'Search Store',
-                prefixIcon: Icons.search,
+            Padding(
+              padding: const EdgeInsets.all(Dimens.dp16),
+              child: TextField(
+                controller: searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Search Store',
+                  prefixIcon: Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    searchQuery = value.toLowerCase();
+                  });
+                },
               ),
             ),
             Dimens.dp16.height,
             Expanded(
-              child: Container(),
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                child: produkItem(
+                  products: products,
+                  searchQuery: searchQuery,
+                  onTap: (product) {
+                    ref
+                        .read(routerProvider)
+                        .pushNamed('detail-product', extra: product);
+                  },
+                ),
+              ),
             ),
           ],
         ),

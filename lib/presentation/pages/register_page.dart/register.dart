@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:online_shop/presentation/methods/show_snackbar.dart';
-import 'package:online_shop/presentation/misc/constan.dart';
-import 'package:online_shop/presentation/provider/router/router_provider.dart';
-import 'package:online_shop/presentation/widgets/btn_widget.dart';
+import 'package:online_shop/presentation/provider/produk_data/produk_provider.dart';
+import '../../methods/show_snackbar.dart';
+import '../../misc/constan.dart';
+import '../../provider/router/router_provider.dart';
+import '../../widgets/btn_widget.dart';
 
 import '../../misc/dimens.dart';
 import '../../provider/user_data/user_data_prov.dart';
@@ -23,6 +24,7 @@ class RegisterPage extends ConsumerWidget {
     ref.listen(userDataProvider, (previous, next) {
       if (next is AsyncData && next.value != null) {
         ref.read(routerProvider).goNamed('main');
+        ref.read(produkDataProvider.notifier).refreshProductData();
       } else if (next is AsyncError) {
         context.showSnackbar(next.error.toString());
       }

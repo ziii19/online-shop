@@ -1,10 +1,11 @@
-import 'package:online_shop/presentation/methods/show_snackbar.dart';
-import 'package:online_shop/presentation/pages/account_page/account_page.dart';
-import 'package:online_shop/presentation/pages/cart_page/cart_page.dart';
-import 'package:online_shop/presentation/pages/favorite_page/favorite_page.dart';
-import 'package:online_shop/presentation/pages/shop_page/shop_page.dart';
-import 'package:online_shop/presentation/provider/router/router_provider.dart';
-import 'package:online_shop/presentation/provider/user_data/user_data_prov.dart';
+import '../../methods/show_snackbar.dart';
+import '../account_page/account_page.dart';
+import '../cart_page/cart_page.dart';
+import '../favorite_page/favorite_page.dart';
+import '../product_page/product_page.dart';
+import '../shop_page/shop_page.dart';
+import '../../provider/router/router_provider.dart';
+import '../../provider/user_data/user_data_prov.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,7 @@ class _MainPageState extends ConsumerState<MainPage> {
   final pages = <Widget>[
     const ShopPage(),
     const CartPage(),
+    const ProductPage(),
     const FavoritePage(),
     const AccountPage(),
   ];
@@ -52,6 +54,10 @@ class _MainPageState extends ConsumerState<MainPage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag_rounded),
             label: 'Cart',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.production_quantity_limits_rounded),
+            label: 'Product',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),

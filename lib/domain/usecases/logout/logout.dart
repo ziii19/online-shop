@@ -1,6 +1,6 @@
-import 'package:online_shop/data/repositories/authentication.dart';
-import 'package:online_shop/domain/entities/result.dart';
-import 'package:online_shop/domain/usecases/usecase.dart';
+import '../../../data/repositories/authentication.dart';
+import '../../entities/result.dart';
+import '../usecase.dart';
 
 class Logout implements UseCase<Result<void>, void> {
   final Authentication _authentication;

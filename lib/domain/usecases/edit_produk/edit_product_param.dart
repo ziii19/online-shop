@@ -1,4 +1,4 @@
-import 'package:online_shop/domain/entities/product.dart';
+import '../../entities/product.dart';
 
 class EditProductParam {
   final Product product;

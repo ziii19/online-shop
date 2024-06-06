@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 
-import 'package:online_shop/data/repositories/authentication.dart';
-import 'package:online_shop/domain/entities/result.dart';
+import '../repositories/authentication.dart';
+import '../../domain/entities/result.dart';
 
 class FirebaseAuth implements Authentication {
   final firebase_auth.FirebaseAuth _firebaseAuth;

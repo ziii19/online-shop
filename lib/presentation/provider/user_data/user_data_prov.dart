@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/entities/entities.dart';
-import '../../../domain/usecases/usecases.dart';
+import '../../../domain/usecases/get_logged_in_user.dart/get_loggedin_user.dart';
+import '../../../domain/usecases/login/login.dart';
+import '../../../domain/usecases/login/login_params.dart';
+import '../../../domain/usecases/logout/logout.dart';
+import '../../../domain/usecases/register/register.dart';
+import '../../../domain/usecases/register/register_param.dart';
+import '../../../domain/usecases/upload_photo_profile/upload_photo_profile.dart';
+import '../../../domain/usecases/upload_photo_profile/upload_photo_profile_param.dart';
 import '../usecase/usecase.dart';
 
 part 'user_data_prov.g.dart';
@@ -64,11 +71,15 @@ class UserData extends _$UserData {
     }
   }
 
-  Future<Result<User>> uploadPP(
-      {required User user, required File imageFile}) async {
+  Future<void> uploadPP({required User user, required File imageFile}) async {
     UploadPhotoProfile uploadPP = ref.read(uploadPhotoProfileProvider);
 
-    return await uploadPP(UploadPPParam(imageFile: imageFile, user: user));
+    var result =
+        await uploadPP(UploadPPParam(imageFile: imageFile, user: user));
+
+    if (result case Success(value: final user)) {
+      state = AsyncData(user);
+    }
   }
 
   Future<void> refreshUserData() async {
@@ -83,15 +94,16 @@ class UserData extends _$UserData {
 
   Future<void> logout() async {
     Logout logout = ref.read(logoutProvider);
-
     var result = await logout(null);
 
     switch (result) {
       case Success(value: _):
         state = const AsyncData(null);
+
       case Failed(:final message):
         state = AsyncError(FlutterError(message), StackTrace.current);
         state = AsyncData(state.valueOrNull);
     }
   }
+
 }

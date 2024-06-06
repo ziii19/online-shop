@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:online_shop/data/repositories/produk_repo.dart';
-import 'package:online_shop/domain/entities/product.dart';
-import 'package:online_shop/domain/entities/result.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import '../repositories/produk_repo.dart';
+import '../../domain/entities/product.dart';
+import '../../domain/entities/result.dart';
 
 class FirebaseProdukRepo implements ProductRepo {
   final FirebaseFirestore _firebaseFirestore;
@@ -30,17 +31,35 @@ class FirebaseProdukRepo implements ProductRepo {
   }
 
   @override
-  Future<Result<void>> deleteProduct({required int id}) async {
+  Future<Result<void>> deleteProduct(
+      {required Product product, required String id}) async {
     try {
-      DocumentReference<Map<String, dynamic>> documentReference =
-          _firebaseFirestore.doc('product/$id');
+      if (product.imgProduct.isNotEmpty) {
+        Reference image =
+            FirebaseStorage.instance.refFromURL(product.imgProduct);
+        image.delete();
+        DocumentReference<Map<String, dynamic>> documentReference =
+            _firebaseFirestore.doc('product/$id');
 
-      await documentReference.delete();
+        await documentReference.delete();
+      }
       return const Result.success(null);
     } catch (e) {
       return Result.failed('Failed to delete Product: $e');
     }
   }
+  // @override
+  // Future<Result<void>> deleteProduct({required String id}) async {
+  //   try {
+  //     DocumentReference<Map<String, dynamic>> documentReference =
+  //         _firebaseFirestore.doc('product/$id');
+
+  //     await documentReference.delete();
+  //     return const Result.success(null);
+  //   } catch (e) {
+  //     return Result.failed('Failed to delete Product: $e');
+  //   }
+  // }
 
   @override
   Future<Result<Product>> editProduct({required Product product}) async {

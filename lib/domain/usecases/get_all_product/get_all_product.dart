@@ -1,6 +1,6 @@
-import 'package:online_shop/data/repositories/produk_repo.dart';
-import 'package:online_shop/domain/entities/entities.dart';
-import 'package:online_shop/domain/usecases/usecase.dart';
+import '../../../data/repositories/produk_repo.dart';
+import '../../entities/entities.dart';
+import '../usecase.dart';
 
 class GetAllProduct implements UseCase<Result<List<Product>>, void> {
   final ProductRepo _productRepo;

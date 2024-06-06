@@ -1,6 +1,6 @@
-import 'package:online_shop/domain/usecases/get_logged_in_user.dart/get_loggedin_user.dart';
-import 'package:online_shop/presentation/provider/repositories/authentication/auth_provider.dart';
-import 'package:online_shop/presentation/provider/repositories/user_repo/user_repo_provider.dart';
+import '../../../domain/usecases/get_logged_in_user.dart/get_loggedin_user.dart';
+import '../repositories/authentication/auth_provider.dart';
+import '../repositories/user_repo/user_repo_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_logged_in_user_prov.g.dart';

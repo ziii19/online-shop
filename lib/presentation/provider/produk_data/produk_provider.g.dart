@@ -6,11 +6,12 @@ part of 'produk_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$produkDataHash() => r'7ad7ff7b23b8a2998e322bd255e35cddce03777b';
+String _$produkDataHash() => r'b166077074890641113dde637290caddc38ecd85';
 
 /// See also [ProdukData].
 @ProviderFor(ProdukData)
-final produkDataProvider = AsyncNotifierProvider<ProdukData, dynamic>.internal(
+final produkDataProvider =
+    AsyncNotifierProvider<ProdukData, List<Product>>.internal(
   ProdukData.new,
   name: r'produkDataProvider',
   debugGetCreateSourceHash:
@@ -19,6 +20,6 @@ final produkDataProvider = AsyncNotifierProvider<ProdukData, dynamic>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef _$ProdukData = AsyncNotifier<dynamic>;
+typedef _$ProdukData = AsyncNotifier<List<Product>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

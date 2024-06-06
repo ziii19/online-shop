@@ -7,5 +7,6 @@ abstract interface class ProductRepo {
   Future<Result<List<Product>>> getAllProduct();
 
   Future<Result<Product>> editProduct({required Product product});
-  Future<Result<void>> deleteProduct({required int id});
+  Future<Result<void>> deleteProduct(
+      {required Product product, required String id});
 }

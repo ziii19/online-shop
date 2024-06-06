@@ -1,7 +1,7 @@
-import 'package:online_shop/data/repositories/produk_repo.dart';
-import 'package:online_shop/domain/entities/entities.dart';
-import 'package:online_shop/domain/usecases/edit_produk/edit_product_param.dart';
-import 'package:online_shop/domain/usecases/usecase.dart';
+import '../../../data/repositories/produk_repo.dart';
+import '../../entities/entities.dart';
+import 'edit_product_param.dart';
+import '../usecase.dart';
 
 class EditProduct implements UseCase<Result<void>, EditProductParam> {
   final ProductRepo _productRepo;

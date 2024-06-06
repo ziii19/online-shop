@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:online_shop/presentation/misc/constan.dart';
-import 'package:online_shop/presentation/misc/dimens.dart';
+import 'constan.dart';
+import 'dimens.dart';
 
 class LightTheme {
   LightTheme(this.primaryColor);
@@ -18,11 +18,9 @@ class LightTheme {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(Dimens.dp8),
-        borderSide: const BorderSide(color: white),
       ),
       disabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(Dimens.dp8),
-        borderSide: const BorderSide(color: white),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(Dimens.dp8),
@@ -56,6 +54,7 @@ class LightTheme {
   ThemeData get theme {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: 'Poppins',
       scaffoldBackgroundColor: scaffold,
       inputDecorationTheme: inputDecorationTheme,
       bottomNavigationBarTheme: bottomNavigationBarTheme,
