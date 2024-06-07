@@ -136,7 +136,7 @@ class _EditProductState extends ConsumerState<EditProduct> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Product'),
+        title: const Text('Edit Product'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -165,13 +165,13 @@ class _EditProductState extends ConsumerState<EditProduct> {
                           height: 150,
                           padding: const EdgeInsets.all(Dimens.dp16),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Dimens.dp8),
-                            border: Border.all(color: Colors.grey.shade300),
-                          ),
-                          child: Image.network(
-                            widget.product.imgProduct,
-                            fit: BoxFit.cover,
-                          )),
+                              borderRadius: BorderRadius.circular(Dimens.dp8),
+                              border: Border.all(color: Colors.grey.shade300),
+                              image: DecorationImage(
+                                image: NetworkImage(widget.product.imgProduct),
+                                fit: BoxFit.cover,
+                              )),
+                        ),
                 ),
                 Dimens.dp16.height,
                 textForm(text: 'Product Name'),
@@ -180,6 +180,10 @@ class _EditProductState extends ConsumerState<EditProduct> {
                   required: true,
                   hintText: 'product name',
                   controller: nameController,
+                  maxLength: 20,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                  ],
                 ),
                 Dimens.dp16.height,
                 textForm(text: 'Product Description'),
@@ -196,18 +200,20 @@ class _EditProductState extends ConsumerState<EditProduct> {
                   required: true,
                   hintText: 'Rp 100.000,-',
                   controller: priceController,
+                  maxLength: 10,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
                   ],
                   keyboardType: TextInputType.number,
                 ),
+                Dimens.dp100.height,
               ],
             ),
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(Dimens.dp16),
         child: SizedBox(
           width: double.infinity,

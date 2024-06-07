@@ -164,6 +164,10 @@ class _FormProductState extends ConsumerState<FormProduct> {
                   required: true,
                   hintText: 'product name',
                   controller: nameController,
+                  maxLength: 20,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                  ],
                 ),
                 Dimens.dp16.height,
                 textForm(text: 'Product Description'),
@@ -180,18 +184,20 @@ class _FormProductState extends ConsumerState<FormProduct> {
                   required: true,
                   hintText: 'Rp 100.000,-',
                   controller: priceController,
+                  maxLength: 10,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10)
                   ],
                   keyboardType: TextInputType.number,
                 ),
+                Dimens.dp100.height,
               ],
             ),
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(Dimens.dp16),
         child: SizedBox(
           width: double.infinity,
