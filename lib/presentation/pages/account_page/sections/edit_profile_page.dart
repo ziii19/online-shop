@@ -142,69 +142,71 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           )
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
+      bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
         child: SizedBox(
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: navy),
-              onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
+              onPressed: _isLoading
+                  ? null
+                  : () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
 
-                var user = ref.watch(userDataProvider).valueOrNull!;
+                      var user = ref.watch(userDataProvider).valueOrNull!;
 
-                if (xfile != null) {
-                  String filename = basename(xfile!.path);
+                      if (xfile != null) {
+                        String filename = basename(xfile!.path);
 
-                  Reference reference =
-                      FirebaseStorage.instance.ref().child(filename);
+                        Reference reference =
+                            FirebaseStorage.instance.ref().child(filename);
 
-                  if (user.photoProfile != null &&
-                      nameController.text != user.name) {
-                    Reference oldPp =
-                        FirebaseStorage.instance.refFromURL(user.photoProfile!);
-                    await oldPp.delete();
-                  }
+                        if (user.photoProfile != null &&
+                            nameController.text != user.name) {
+                          Reference oldPp = FirebaseStorage.instance
+                              .refFromURL(user.photoProfile!);
+                          await oldPp.delete();
+                        }
 
-                  await reference.putFile(File(xfile!.path));
+                        await reference.putFile(File(xfile!.path));
 
-                  String imgUrl = await reference.getDownloadURL();
+                        String imgUrl = await reference.getDownloadURL();
 
-                  if (imgUrl.isNotEmpty) {
-                    var update = user.copyWith(
-                        name: nameController.text, photoProfile: imgUrl);
+                        if (imgUrl.isNotEmpty) {
+                          var update = user.copyWith(
+                              name: nameController.text, photoProfile: imgUrl);
 
-                    EditUser editUser = ref.read(editUserProvider);
+                          EditUser editUser = ref.read(editUserProvider);
 
-                    editUser(EditUserParam(user: update));
+                          editUser(EditUserParam(user: update));
 
-                    ref.read(userDataProvider.notifier).refreshUserData();
+                          ref.read(userDataProvider.notifier).refreshUserData();
 
-                    ref.read(routerProvider).pop();
-                  } else {
-                    context.showSnackbar('Failed to upload photo profile');
-                  }
-                } else if (nameController.text != user.name) {
-                  var update = user.copyWith(name: nameController.text);
+                          ref.read(routerProvider).pop();
+                        } else {
+                          context
+                              .showSnackbar('Failed to upload photo profile');
+                        }
+                      } else if (nameController.text != user.name) {
+                        var update = user.copyWith(name: nameController.text);
 
-                  EditUser editUser = ref.read(editUserProvider);
+                        EditUser editUser = ref.read(editUserProvider);
 
-                  editUser(EditUserParam(user: update));
+                        editUser(EditUserParam(user: update));
 
-                  ref.read(userDataProvider.notifier).refreshUserData();
+                        ref.read(userDataProvider.notifier).refreshUserData();
 
-                  ref.read(routerProvider).pop();
-                } else {
-                  context.showSnackbar('No changes made');
-                }
-                setState(() {
-                  _isLoading = false;
-                });
-              },
+                        ref.read(routerProvider).pop();
+                      } else {
+                        context.showSnackbar('No changes made');
+                      }
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    },
               child: _isLoading
                   ? const CircularProgressIndicator()
                   : const Text(
