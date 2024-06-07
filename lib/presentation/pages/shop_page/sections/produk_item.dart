@@ -6,6 +6,7 @@ Widget produkItem({
   void Function(Product product)? onTap,
 }) {
   return GridView.count(
+    padding: const EdgeInsets.only(bottom: 100),
     crossAxisCount: 2,
     mainAxisSpacing: 16,
     crossAxisSpacing: 16,

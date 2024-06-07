@@ -109,18 +109,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 image: DecorationImage(
-                                  image: ref
-                                              .watch(userDataProvider)
-                                              .valueOrNull!
-                                              .photoProfile !=
-                                          null
-                                      ? NetworkImage(ref
-                                          .watch(userDataProvider)
-                                          .valueOrNull!
-                                          .photoProfile!) as ImageProvider
-                                      : const AssetImage(
-                                          'assets/images/ikon.png'),
-                                ),
+                                    image: ref
+                                                .watch(userDataProvider)
+                                                .valueOrNull!
+                                                .photoProfile !=
+                                            null
+                                        ? NetworkImage(ref
+                                            .watch(userDataProvider)
+                                            .valueOrNull!
+                                            .photoProfile!) as ImageProvider
+                                        : const AssetImage(
+                                            'assets/images/ikon.png'),
+                                    fit: BoxFit.cover),
                               ),
                             ),
                     ),
@@ -157,17 +157,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
                 var user = ref.watch(userDataProvider).valueOrNull!;
 
-                if (xfile != null && user.photoProfile != null) {
-                  Reference oldPp =
-                      FirebaseStorage.instance.refFromURL(user.photoProfile!);
-                  await oldPp.delete();
-                }
-
-                if (xfile != null || nameController.text != user.name) {
+                if (xfile != null) {
                   String filename = basename(xfile!.path);
 
                   Reference reference =
                       FirebaseStorage.instance.ref().child(filename);
+
+                  if (user.photoProfile != null &&
+                      nameController.text != user.name) {
+                    Reference oldPp =
+                        FirebaseStorage.instance.refFromURL(user.photoProfile!);
+                    await oldPp.delete();
+                  }
 
                   await reference.putFile(File(xfile!.path));
 
@@ -185,16 +186,18 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
                     ref.read(routerProvider).pop();
                   } else {
-                    var update = user.copyWith(name: nameController.text);
-
-                    EditUser editUser = ref.read(editUserProvider);
-
-                    editUser(EditUserParam(user: update));
-
-                    ref.read(userDataProvider.notifier).refreshUserData();
-
-                    ref.read(routerProvider).pop();
+                    context.showSnackbar('Failed to upload photo profile');
                   }
+                } else if (nameController.text != user.name) {
+                  var update = user.copyWith(name: nameController.text);
+
+                  EditUser editUser = ref.read(editUserProvider);
+
+                  editUser(EditUserParam(user: update));
+
+                  ref.read(userDataProvider.notifier).refreshUserData();
+
+                  ref.read(routerProvider).pop();
                 } else {
                   context.showSnackbar('No changes made');
                 }
