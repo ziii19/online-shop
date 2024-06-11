@@ -61,9 +61,9 @@ class DetailProdukPage extends ConsumerWidget {
                         ],
                       ),
                     )
-                  ],
+                  ], 
                 ),
-              ),
+              ),   
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5),
                 child: Column(
@@ -125,10 +125,6 @@ class DetailProdukPage extends ConsumerWidget {
                               color: hitam,
                             ),
                           ),
-                          Icon(
-                            Icons.arrow_drop_down,
-                            size: 30,
-                          )
                         ],
                       ),
                     ),
@@ -149,9 +145,8 @@ class DetailProdukPage extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
         child: ButtonCustom(
           textBtn: 'Add To Cart',
           onPressed: () {

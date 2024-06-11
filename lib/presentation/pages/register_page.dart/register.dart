@@ -41,7 +41,7 @@ class RegisterPage extends ConsumerWidget {
               ),
             ),
             RegularTextInput(
-              labelText: 'name',
+              labelText: 'Name',
               controller: nameController,
             ),
             Dimens.dp20.height,

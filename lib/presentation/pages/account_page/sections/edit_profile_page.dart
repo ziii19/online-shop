@@ -1,24 +1,22 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:online_shop/domain/usecases/edit_user/edit_user.dart';
-import 'package:online_shop/domain/usecases/edit_user/edit_user_param.dart';
 import 'package:online_shop/presentation/methods/show_snackbar.dart';
-import 'package:online_shop/presentation/misc/constan.dart';
-import 'package:online_shop/presentation/misc/dimens.dart';
-import 'package:online_shop/presentation/provider/router/router_provider.dart';
-import 'package:online_shop/presentation/provider/usecase/edit_user_prov.dart';
 import 'package:path/path.dart';
 
+import '../../../../domain/usecases/edit_user/edit_user.dart';
+import '../../../../domain/usecases/edit_user/edit_user_param.dart';
+import '../../../misc/constan.dart';
+import '../../../provider/router/router_provider.dart';
+import '../../../provider/usecase/edit_user_prov.dart';
 import '../../../provider/user_data/user_data_prov.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   const EditProfilePage({super.key});
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _EditProfilePageState();
@@ -27,17 +25,22 @@ class EditProfilePage extends ConsumerStatefulWidget {
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  final TextEditingController _birthdateController =
+      TextEditingController(text: "../../....");
 
-  XFile? xfile;
+  XFile? _image;
   bool _isLoading = false;
   final ImagePicker _picker = ImagePicker();
-  final int _maxFileSize = 3 * 1024 * 1024; // 3MB
+  final int _maxFileSize = 3 * 1024 * 1024;
 
   @override
   void initState() {
     super.initState();
-    nameController.text = ref.read(userDataProvider).valueOrNull!.name;
-    emailController.text = ref.read(userDataProvider).valueOrNull!.email;
+    final userData = ref.read(userDataProvider).valueOrNull;
+    if (userData != null) {
+      nameController.text = userData.name;
+      emailController.text = userData.email;
+    }
   }
 
   @override
@@ -56,97 +59,112 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               .showSnackbar("File terlalu besar. Ukuran maksimum adalah 3MB.");
         } else {
           setState(() {
-            xfile = pickedFile;
+            _image = pickedFile;
           });
         }
       }
     }
 
+    // ignore: no_leading_underscores_for_local_identifiers
+    Future<void> _selectDate(TextEditingController controller) async {
+      DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2101),
+      );
+      if (picked != null) {
+        setState(() {
+          controller.text = "${picked.day}/${picked.month}/${picked.year}";
+        });
+      }
+    }
+
     return Scaffold(
-      body: Column(
-        children: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: InkWell(
-                onTap: () {
-                  ref.read(routerProvider).pop();
-                },
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.black,
-                    ),
-                    Dimens.dp16.width,
-                    const Text(
-                      'Edit Profile',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new),
+          onPressed: () {
+            ref.read(routerProvider).pop();
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: _pickImage,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundColor: scaffold,
+                backgroundImage:
+                    _image != null ? FileImage(File(_image!.path)) : null,
+                child: _image != null
+                    ? null
+                    : Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: ref
+                                          .watch(userDataProvider)
+                                          .valueOrNull!
+                                          .photoProfile !=
+                                      null
+                                  ? NetworkImage(ref
+                                      .watch(userDataProvider)
+                                      .valueOrNull!
+                                      .photoProfile!) as ImageProvider
+                                  : const AssetImage('assets/images/ikon.png'),
+                              fit: BoxFit.cover),
+                        ),
+                      ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: ListView(
-                children: [
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: scaffold,
-                      backgroundImage:
-                          xfile != null ? FileImage(File(xfile!.path)) : null,
-                      child: xfile != null
-                          ? null
-                          : Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                    image: ref
-                                                .watch(userDataProvider)
-                                                .valueOrNull!
-                                                .photoProfile !=
-                                            null
-                                        ? NetworkImage(ref
-                                            .watch(userDataProvider)
-                                            .valueOrNull!
-                                            .photoProfile!) as ImageProvider
-                                        : const AssetImage(
-                                            'assets/images/ikon.png'),
-                                    fit: BoxFit.cover),
-                              ),
-                            ),
-                    ),
-                  ),
-                  Dimens.dp100.height,
-                  TextFormField(
-                    controller: nameController,
-                    decoration: const InputDecoration(label: Text('Name')),
-                  ),
-                  Dimens.dp20.height,
-                  TextFormField(
-                    controller: emailController,
-                    enabled: false,
-                    decoration: const InputDecoration(label: Text('Email')),
-                  ),
-                ],
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Name',
               ),
             ),
-          )
-        ],
+            const SizedBox(
+              height: 8,
+            ),
+            TextFormField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                enabled: false,
+              ),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            ProfileTextField(
+              labelText: "Birthdate",
+              controller: _birthdateController,
+              isDate: true,
+              selectDate: _selectDate,
+            ),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Contact number',
+                hintText: '+62',
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+        padding: const EdgeInsets.only(left: 65, right: 65, bottom: 30),
         child: SizedBox(
-          width: double.infinity,
           height: 50,
+          width: double.infinity,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: navy),
               onPressed: _isLoading
@@ -158,8 +176,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
                       var user = ref.watch(userDataProvider).valueOrNull!;
 
-                      if (xfile != null) {
-                        String filename = basename(xfile!.path);
+                      if (_image != null) {
+                        String filename = basename(_image!.path);
 
                         Reference reference =
                             FirebaseStorage.instance.ref().child(filename);
@@ -171,7 +189,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           await oldPp.delete();
                         }
 
-                        await reference.putFile(File(xfile!.path));
+                        await reference.putFile(File(_image!.path));
 
                         String imgUrl = await reference.getDownloadURL();
 
@@ -213,6 +231,43 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       'Update Profile',
                       style: TextStyle(color: white, fontSize: 16),
                     )),
+        ),
+      ),
+    );
+  }
+}
+
+class ProfileTextField extends StatelessWidget {
+  final String labelText;
+  final TextEditingController controller;
+  final bool isDate;
+  final Function(TextEditingController) selectDate;
+
+  const ProfileTextField({
+    super.key,
+    required this.labelText,
+    required this.controller,
+    this.isDate = false,
+    required this.selectDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextField(
+        controller: controller,
+        readOnly: isDate,
+        decoration: InputDecoration(
+          labelText: labelText,
+          suffixIcon: isDate
+              ? IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  onPressed: () {
+                    selectDate(controller);
+                  },
+                )
+              : null,
         ),
       ),
     );

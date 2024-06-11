@@ -4,7 +4,7 @@ import '../../../misc/constan.dart';
 class ItemAccount extends StatelessWidget {
   const ItemAccount(
       {super.key,
-      this.text = 'dhanisa',
+      required this.text,
       this.color = hitam,
       this.textSize = 18.0,
       required this.icon,

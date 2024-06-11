@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:online_shop/domain/entities/product.dart';
 import 'package:online_shop/presentation/pages/account_page/sections/edit_profile_page.dart';
-import 'package:online_shop/presentation/pages/detail_produk_page.dart/detail_produk_page.dart';
+import 'package:online_shop/presentation/pages/detail_produk_page/detail_produk_page.dart';
 import 'package:online_shop/presentation/pages/help_page/help_page.dart';
 import 'package:online_shop/presentation/pages/product_page/sections/edit_product.dart';
 import '../../pages/login/login.dart';
