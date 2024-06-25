@@ -182,8 +182,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         Reference reference =
                             FirebaseStorage.instance.ref().child(filename);
 
-                        if (user.photoProfile != null &&
-                            nameController.text != user.name) {
+                        if (user.photoProfile != null) {
                           Reference oldPp = FirebaseStorage.instance
                               .refFromURL(user.photoProfile!);
                           await oldPp.delete();
@@ -193,7 +192,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
 
                         String imgUrl = await reference.getDownloadURL();
 
-                        if (imgUrl.isNotEmpty) {
+                        if (imgUrl.isNotEmpty &&
+                            nameController.text != user.name) {
                           var update = user.copyWith(
                               name: nameController.text, photoProfile: imgUrl);
 
