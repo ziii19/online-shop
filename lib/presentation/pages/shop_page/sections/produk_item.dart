@@ -2,7 +2,7 @@ part of '../shop_page.dart';
 
 Widget produkItem({
   required AsyncValue<List<Product>> products,
-  required String searchQuery,
+  String? searchQuery,
   void Function(Product product)? onTap,
 }) {
   return GridView.count(
@@ -15,7 +15,7 @@ Widget produkItem({
       data: (data) {
         // Filter produk berdasarkan searchQuery
         final filteredProducts = data.where((product) {
-          return product.nameProduct.toLowerCase().contains(searchQuery);
+          return product.nameProduct.toLowerCase().contains(searchQuery!);
         }).toList();
 
         return filteredProducts
