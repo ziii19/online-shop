@@ -9,6 +9,8 @@ class User with _$User {
     required String uid,
     required String name,
     required String email,
+    String? birthday,
+    num? phoneNumber,
     @Default(0) int? product,
     String? photoProfile,
   }) = _User;

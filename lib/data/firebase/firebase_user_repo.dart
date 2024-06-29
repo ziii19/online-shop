@@ -17,7 +17,8 @@ class FirebaseUserRepo implements UserRepository {
       {required String uid,
       required String email,
       required String name,
-      int product = 0,
+      String? birthday,
+      num? phoneNumber,
       String? photoProfile}) async {
     CollectionReference<Map<String, dynamic>> reference =
         _firebaseFirestore.collection('users');
@@ -26,7 +27,8 @@ class FirebaseUserRepo implements UserRepository {
       'uid': uid,
       'email': email,
       'name': name,
-      'product': product,
+      'birthday': birthday,
+      'phoneNumber': phoneNumber,
       'photoProfile': photoProfile,
     });
 
@@ -56,13 +58,13 @@ class FirebaseUserRepo implements UserRepository {
 
   @override
   Future<Result<User>> updateUser({required User user}) async {
- try {
+    try {
       DocumentReference<Map<String, dynamic>> users =
           _firebaseFirestore.doc('users/${user.uid}');
       await users.update(user.toJson());
 
       DocumentSnapshot<Map<String, dynamic>> result = await users.get();
-  
+
       if (result.exists) {
         User updateUser = User.fromJson(result.data()!);
 

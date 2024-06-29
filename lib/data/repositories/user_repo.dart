@@ -8,6 +8,8 @@ abstract interface class UserRepository {
     required String uid,
     required String email,
     required String name,
+    String? birthday,
+    num? phoneNumber,
     String? photoProfile,
   });
 

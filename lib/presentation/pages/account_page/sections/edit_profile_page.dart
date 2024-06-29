@@ -25,7 +25,8 @@ class EditProfilePage extends ConsumerStatefulWidget {
 class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  final TextEditingController _birthdateController =
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController _birthdateController =
       TextEditingController(text: "../../....");
 
   XFile? _image;
@@ -40,6 +41,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
     if (userData != null) {
       nameController.text = userData.name;
       emailController.text = userData.email;
+      _birthdateController.text = userData.birthday!;
+      phoneController.text = userData.phoneNumber.toString();
     }
   }
 
@@ -151,6 +154,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
               selectDate: _selectDate,
             ),
             TextFormField(
+              controller: phoneController,
               decoration: const InputDecoration(
                 labelText: 'Contact number',
                 hintText: '+62',
@@ -195,7 +199,11 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         if (imgUrl.isNotEmpty &&
                             nameController.text != user.name) {
                           var update = user.copyWith(
-                              name: nameController.text, photoProfile: imgUrl);
+                            name: nameController.text,
+                            photoProfile: imgUrl,
+                            birthday: _birthdateController.text,
+                            phoneNumber: num.parse(phoneController.text),
+                          );
 
                           EditUser editUser = ref.read(editUserProvider);
 
@@ -208,8 +216,14 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           context
                               .showSnackbar('Failed to upload photo profile');
                         }
-                      } else if (nameController.text != user.name) {
-                        var update = user.copyWith(name: nameController.text);
+                      } else if (nameController.text != user.name ||
+                          _birthdateController.text.isNotEmpty ||
+                          phoneController.text.isNotEmpty) {
+                        var update = user.copyWith(
+                          name: nameController.text,
+                          birthday: _birthdateController.text,
+                          phoneNumber: num.parse(phoneController.text),
+                        );
 
                         EditUser editUser = ref.read(editUserProvider);
 

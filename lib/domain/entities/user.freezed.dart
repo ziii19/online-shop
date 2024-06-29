@@ -23,6 +23,8 @@ mixin _$User {
   String get uid => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
+  String? get birthday => throw _privateConstructorUsedError;
+  num? get phoneNumber => throw _privateConstructorUsedError;
   int? get product => throw _privateConstructorUsedError;
   String? get photoProfile => throw _privateConstructorUsedError;
 
@@ -40,6 +42,8 @@ abstract class $UserCopyWith<$Res> {
       {String uid,
       String name,
       String email,
+      String? birthday,
+      num? phoneNumber,
       int? product,
       String? photoProfile});
 }
@@ -60,6 +64,8 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? uid = null,
     Object? name = null,
     Object? email = null,
+    Object? birthday = freezed,
+    Object? phoneNumber = freezed,
     Object? product = freezed,
     Object? photoProfile = freezed,
   }) {
@@ -76,6 +82,14 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as num?,
       product: freezed == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
@@ -99,6 +113,8 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       {String uid,
       String name,
       String email,
+      String? birthday,
+      num? phoneNumber,
       int? product,
       String? photoProfile});
 }
@@ -116,6 +132,8 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? uid = null,
     Object? name = null,
     Object? email = null,
+    Object? birthday = freezed,
+    Object? phoneNumber = freezed,
     Object? product = freezed,
     Object? photoProfile = freezed,
   }) {
@@ -132,6 +150,14 @@ class __$$UserImplCopyWithImpl<$Res>
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
+      birthday: freezed == birthday
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as String?,
+      phoneNumber: freezed == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as num?,
       product: freezed == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
@@ -151,6 +177,8 @@ class _$UserImpl implements _User {
       {required this.uid,
       required this.name,
       required this.email,
+      this.birthday,
+      this.phoneNumber,
       this.product = 0,
       this.photoProfile});
 
@@ -164,6 +192,10 @@ class _$UserImpl implements _User {
   @override
   final String email;
   @override
+  final String? birthday;
+  @override
+  final num? phoneNumber;
+  @override
   @JsonKey()
   final int? product;
   @override
@@ -171,7 +203,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(uid: $uid, name: $name, email: $email, product: $product, photoProfile: $photoProfile)';
+    return 'User(uid: $uid, name: $name, email: $email, birthday: $birthday, phoneNumber: $phoneNumber, product: $product, photoProfile: $photoProfile)';
   }
 
   @override
@@ -182,6 +214,10 @@ class _$UserImpl implements _User {
             (identical(other.uid, uid) || other.uid == uid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
             (identical(other.product, product) || other.product == product) &&
             (identical(other.photoProfile, photoProfile) ||
                 other.photoProfile == photoProfile));
@@ -189,8 +225,8 @@ class _$UserImpl implements _User {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, uid, name, email, product, photoProfile);
+  int get hashCode => Object.hash(runtimeType, uid, name, email, birthday,
+      phoneNumber, product, photoProfile);
 
   @JsonKey(ignore: true)
   @override
@@ -211,6 +247,8 @@ abstract class _User implements User {
       {required final String uid,
       required final String name,
       required final String email,
+      final String? birthday,
+      final num? phoneNumber,
       final int? product,
       final String? photoProfile}) = _$UserImpl;
 
@@ -222,6 +260,10 @@ abstract class _User implements User {
   String get name;
   @override
   String get email;
+  @override
+  String? get birthday;
+  @override
+  num? get phoneNumber;
   @override
   int? get product;
   @override
