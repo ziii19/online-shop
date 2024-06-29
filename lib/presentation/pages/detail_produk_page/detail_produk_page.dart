@@ -53,6 +53,7 @@ class _DetailProdukPageState extends ConsumerState<DetailProdukPage> {
     final user = ref.watch(userProvider(uid: widget.product.uid));
     return Scaffold(
       body: ListView(
+        padding: EdgeInsets.zero,
         controller: _scrollController,
         children: [
           Column(
@@ -62,40 +63,51 @@ class _DetailProdukPageState extends ConsumerState<DetailProdukPage> {
                 height: 400,
                 child: Stack(
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(25),
-                              bottomRight: Radius.circular(25)),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.product.imgProduct,
-                            ),
-                            fit: BoxFit.cover,
-                          )),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(25),
+                                bottomRight: Radius.circular(25)),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                widget.product.imgProduct,
+                              ),
+                              fit: BoxFit.cover,
+                            )),
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              ref.read(routerProvider).pop();
-                            },
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: hitam,
-                              size: 25,
+                    SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                ref.read(routerProvider).pop();
+                              },
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black.withOpacity(.4),
+                                child: const Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: white,
+                                  size: 25,
+                                ),
+                              ),
                             ),
-                          ),
-                          const Icon(
-                            Icons.share,
-                            color: hitam,
-                            size: 25,
-                          ),
-                        ],
+                            CircleAvatar(
+                              backgroundColor: Colors.black.withOpacity(.4),
+                              child: const Icon(
+                                Icons.share,
+                                color: white,
+                                size: 25,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -181,7 +193,7 @@ class _DetailProdukPageState extends ConsumerState<DetailProdukPage> {
                       ref: ref,
                       user: data!,
                       id: widget.product.id,
-                      ),
+                    ),
                     error: (error, stackTrace) => Text('error $error'),
                     loading: () => const CircularProgressIndicator(),
                   ),

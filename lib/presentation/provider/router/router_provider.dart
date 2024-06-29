@@ -4,6 +4,8 @@ import 'package:online_shop/presentation/pages/account_page/sections/edit_profil
 import 'package:online_shop/presentation/pages/detail_produk_page/detail_produk_page.dart';
 import 'package:online_shop/presentation/pages/help_page/help_page.dart';
 import 'package:online_shop/presentation/pages/product_page/sections/edit_product.dart';
+import 'package:online_shop/presentation/pages/profile_page/profile_page.dart';
+import '../../../domain/entities/user.dart';
 import '../../pages/login/login.dart';
 import '../../pages/main_page/main_page.dart';
 import '../../pages/product_page/sections/form_product.dart';
@@ -55,6 +57,13 @@ Raw<GoRouter> router(RouterRef ref) => GoRouter(
           path: '/help',
           name: 'help',
           builder: (context, state) => const HelpPage(),
+        ),
+        GoRoute(
+          path: '/profile',
+          name: 'profile',
+          builder: (context, state) => UserProfile(
+            user: state.extra as User,
+          ),
         )
       ],
       initialLocation: '/login',

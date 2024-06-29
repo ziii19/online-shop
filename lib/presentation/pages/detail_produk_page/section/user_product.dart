@@ -17,29 +17,34 @@ class _UserProductSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: user.photoProfile != null
-                          ? NetworkImage(
-                              user.photoProfile!,
-                            ) as ImageProvider
-                          : const AssetImage('assets/images/ikon.png'),
-                      fit: BoxFit.cover),
+          child: InkWell(
+            onTap: () {
+              ref.read(routerProvider).pushNamed('profile', extra: user);
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: user.photoProfile != null
+                            ? NetworkImage(
+                                user.photoProfile!,
+                              ) as ImageProvider
+                            : const AssetImage('assets/images/ikon.png'),
+                        fit: BoxFit.cover),
+                  ),
                 ),
-              ),
-              Dimens.dp16.width,
-              Text(
-                user.name,
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-            ],
+                Dimens.dp16.width,
+                Text(
+                  user.name,
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
           ),
         ),
         Dimens.dp10.height,
@@ -66,7 +71,9 @@ class _UserProductSection extends StatelessWidget {
                                     onTap: () {
                                       ref
                                           .read(routerProvider)
-                                          .goNamed('detail-product', extra: e);
+                                          .pushReplacementNamed(
+                                              'detail-product',
+                                              extra: e);
                                     },
                                     child: Container(
                                       width: 170,
