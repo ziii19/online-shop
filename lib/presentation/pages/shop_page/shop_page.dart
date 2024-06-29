@@ -13,11 +13,10 @@ class ShopPage extends ConsumerStatefulWidget {
   const ShopPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ShopPageState createState() => _ShopPageState();
+  ShopPageState createState() => ShopPageState();
 }
 
-class _ShopPageState extends ConsumerState<ShopPage> {
+class ShopPageState extends ConsumerState<ShopPage> {
   TextEditingController searchController = TextEditingController();
   String searchQuery = '';
 
@@ -27,45 +26,50 @@ class _ShopPageState extends ConsumerState<ShopPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Center(
-              child: Image.asset(
-                'assets/images/mutushop_banner.png',
-                height: 50,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(Dimens.dp16),
-              child: TextField(
-                controller: searchController,
-                decoration: const InputDecoration(
-                  hintText: 'Search Store',
-                  prefixIcon: Icon(Icons.search),
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    searchQuery = value.toLowerCase();
-                  });
-                },
-              ),
-            ),
-            Dimens.dp16.height,
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: produkItem(
-                  products: products,
-                  searchQuery: searchQuery,
-                  onTap: (product) {
-                    ref
-                        .read(routerProvider)
-                        .pushNamed('detail-product', extra: product);
-                  },
-                ),
+        child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Center(
+                    child: Image.asset(
+                      'assets/images/mutushop_banner.png',
+                      height: 50,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(Dimens.dp16),
+                    child: TextField(
+                      controller: searchController,
+                      decoration: const InputDecoration(
+                        hintText: 'Search Store',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value.toLowerCase();
+                        });
+                      },
+                    ),
+                  ),
+                  Dimens.dp16.height,
+                ],
               ),
             ),
           ],
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: produkItem(
+              products: products,
+              searchQuery: searchQuery,
+              onTap: (product) {
+                ref.read(routerProvider).pushNamed(
+                      'detail-product',
+                      extra: product,
+                    );
+              },
+            ),
+          ),
         ),
       ),
     );
