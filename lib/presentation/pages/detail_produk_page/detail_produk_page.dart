@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:online_shop/domain/entities/product.dart';
 import 'package:online_shop/presentation/methods/int.dart';
 import 'package:online_shop/presentation/misc/dimens.dart';
 import 'package:online_shop/presentation/provider/produk_data/produk_provider.dart';

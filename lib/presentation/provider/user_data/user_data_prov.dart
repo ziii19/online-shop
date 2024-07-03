@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:online_shop/presentation/provider/produk_data/produk_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../domain/entities/entities.dart';
@@ -26,6 +27,7 @@ class UserData extends _$UserData {
 
     switch (userResult) {
       case Success(value: final user):
+        ref.read(produkDataProvider);
         return user;
       case Failed(message: _):
         return null;
@@ -105,5 +107,4 @@ class UserData extends _$UserData {
         state = AsyncData(state.valueOrNull);
     }
   }
-
 }

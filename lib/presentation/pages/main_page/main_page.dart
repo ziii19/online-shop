@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+
 import '../../methods/show_snackbar.dart';
 import '../account_page/account_page.dart';
 import '../cart_page/cart_page.dart';
@@ -18,6 +21,7 @@ class MainPage extends ConsumerStatefulWidget {
 }
 
 class _MainPageState extends ConsumerState<MainPage> {
+  PageController pageController = PageController();
   int index = 0;
 
   final pages = <Widget>[
@@ -38,10 +42,25 @@ class _MainPageState extends ConsumerState<MainPage> {
       }
     });
     return Scaffold(
-      body: pages[index],
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (value) {
+          setState(() {
+            index = value;
+          });
+        },
+        children: const [
+          ShopPage(),
+          CartPage(),
+          ProductPage(),
+          FavoritePage(),
+          AccountPage(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: index,
         onTap: (value) {
+          pageController.jumpToPage(value);
           setState(() {
             index = value;
           });
