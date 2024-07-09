@@ -4,9 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:online_shop/data/firebase/firebase_upload_image.dart';
 import 'package:online_shop/presentation/methods/show_snackbar.dart';
-import 'package:path/path.dart';
-
 import '../../../../domain/usecases/edit_user/edit_user.dart';
 import '../../../../domain/usecases/edit_user/edit_user_param.dart';
 import '../../../misc/constan.dart';
@@ -178,49 +177,33 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                         _isLoading = true;
                       });
 
-                      var user = ref.watch(userDataProvider).valueOrNull!;
+                      var user = ref.watch(userDataProvider).valueOrNull;
+                      if (user == null) {
+                        return;
+                      }
 
-                      if (_image != null) {
-                        String filename = basename(_image!.path);
-
-                        Reference reference =
-                            FirebaseStorage.instance.ref().child(filename);
-
-                        if (user.photoProfile != null) {
-                          Reference oldPp = FirebaseStorage.instance
-                              .refFromURL(user.photoProfile!);
-                          await oldPp.delete();
-                        }
-
-                        await reference.putFile(File(_image!.path));
-
-                        String imgUrl = await reference.getDownloadURL();
-
-                        if (imgUrl.isNotEmpty &&
-                            nameController.text != user.name) {
-                          var update = user.copyWith(
-                            name: nameController.text,
-                            photoProfile: imgUrl,
-                            birthday: _birthdateController.text,
-                            phoneNumber: num.parse(phoneController.text),
-                          );
-
-                          EditUser editUser = ref.read(editUserProvider);
-
-                          editUser(EditUserParam(user: update));
-
-                          ref.read(userDataProvider.notifier).refreshUserData();
-
-                          ref.read(routerProvider).pop();
-                        } else {
-                          context
-                              .showSnackbar('Failed to upload photo profile');
-                        }
-                      } else if (nameController.text != user.name ||
+                      bool update = nameController.text != user.name ||
                           _birthdateController.text.isNotEmpty ||
-                          phoneController.text.isNotEmpty) {
+                          phoneController.text.isNotEmpty ||
+                          _image != null;
+
+                      if (update) {
+                        String? imgUrl;
+
+                        if (_image != null) {
+                          if (user.photoProfile != null) {
+                            Reference oldPp = FirebaseStorage.instance
+                                .refFromURL(user.photoProfile!);
+                            await oldPp.delete();
+                          }
+                          imgUrl = await UploadImage.uploadImage(
+                              File(_image!.path), 'ProfileImage');
+                        }
+
                         var update = user.copyWith(
                           name: nameController.text,
+                          photoProfile:
+                              _image != null ? imgUrl : user.photoProfile,
                           birthday: _birthdateController.text,
                           phoneNumber: num.parse(phoneController.text),
                         );
@@ -270,6 +253,7 @@ class ProfileTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextField(
+        keyboardType: TextInputType.datetime,
         controller: controller,
         readOnly: isDate,
         decoration: InputDecoration(
