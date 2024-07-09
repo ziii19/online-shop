@@ -26,7 +26,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController _birthdateController =
+  final TextEditingController _birthdateController =
       TextEditingController(text: "../../....");
 
   XFile? _image;

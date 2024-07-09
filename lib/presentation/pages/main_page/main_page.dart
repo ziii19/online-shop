@@ -1,6 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-
 import '../../methods/show_snackbar.dart';
 import '../account_page/account_page.dart';
 import '../cart_page/cart_page.dart';

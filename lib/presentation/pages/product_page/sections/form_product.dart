@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:online_shop/data/firebase/firebase_upload_image.dart';
 
 import '../../../../domain/entities/entities.dart';
 import '../../../methods/show_snackbar.dart';
@@ -55,15 +54,10 @@ class _FormProductState extends ConsumerState<FormProduct> {
             nameController.text.isNotEmpty &&
             descController.text.isNotEmpty &&
             priceController.text.isNotEmpty) {
-          String filename = basename(xfile!.path);
+          var imgUrl =
+              await UploadImage.uploadImage(File(xfile!.path), 'product');
 
-          Reference reference = FirebaseStorage.instance.ref().child(filename);
-
-          await reference.putFile(File(xfile!.path));
-
-          String downloadUrl = await reference.getDownloadURL();
-
-          if (downloadUrl.isNotEmpty) {
+          if (imgUrl.isNotEmpty) {
             var userId = ref.watch(userDataProvider).valueOrNull!.uid;
             var price = int.tryParse(priceController.text);
             var time = DateTime.now().millisecondsSinceEpoch;
@@ -74,7 +68,7 @@ class _FormProductState extends ConsumerState<FormProduct> {
                 nameProduct: nameController.text,
                 price: price as int,
                 desc: descController.text,
-                imgProduct: downloadUrl);
+                imgProduct: imgUrl);
 
             ref.read(produkDataProvider.notifier).addProduct(product: product);
             ref.read(produkDataProvider.notifier).refreshProductData();
