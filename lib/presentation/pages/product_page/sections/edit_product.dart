@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart';
+import 'package:online_shop/data/firebase/firebase_upload_image.dart';
 
 import '../../../../domain/entities/entities.dart';
 import '../../../methods/show_snackbar.dart';
@@ -57,47 +57,36 @@ class _EditProductState extends ConsumerState<EditProduct> {
       setState(() {
         _isLoading = true;
       });
+      var product = widget.product;
+      bool productUpdate = nameController.text != product.nameProduct ||
+          descController.text != product.desc ||
+          priceController.text != product.price.toString() ||
+          xfile != null;
 
       try {
-        if (nameController.text != widget.product.nameProduct ||
-            descController.text != widget.product.desc ||
-            priceController.text != widget.product.price.toString() ||
-            xfile != null) {
+        if (productUpdate) {
           var price = int.tryParse(priceController.text);
+          String? imgUrl;
 
           if (xfile != null) {
-            String filename = basename(xfile!.path);
-
-            Reference reference =
-                FirebaseStorage.instance.ref().child(filename);
             Reference oldImage =
                 FirebaseStorage.instance.refFromURL(widget.product.imgProduct);
 
             oldImage.delete();
-            await reference.putFile(File(xfile!.path));
 
-            String downloadUrl = await reference.getDownloadURL();
+            imgUrl =
+                await UploadImage.uploadImage(File(xfile!.path), 'product');
+          }
 
-            var updateProduct = widget.product.copyWith(
-                price: price as int,
-                nameProduct: nameController.text,
-                desc: descController.text,
-                imgProduct: downloadUrl);
-
-            ref
-                .read(produkDataProvider.notifier)
-                .editProduct(product: updateProduct);
-          } else {
-            var updateProduct = widget.product.copyWith(
+          var updateProduct = widget.product.copyWith(
               price: price as int,
               nameProduct: nameController.text,
               desc: descController.text,
-            );
+              imgProduct: imgUrl ?? product.imgProduct);
 
-            ref
-                .read(produkDataProvider.notifier)
-                .editProduct(product: updateProduct);
-          }
+          ref
+              .read(produkDataProvider.notifier)
+              .editProduct(product: updateProduct);
 
           ref.read(produkDataProvider.notifier).refreshProductData();
           ref.read(routerProvider).pop();
