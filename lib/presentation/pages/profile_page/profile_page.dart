@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:online_shop/presentation/methods/int.dart';
@@ -133,14 +134,24 @@ class UserProfile extends ConsumerWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
+                                    SizedBox(
                                       height: 110,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14),
-                                          image: DecorationImage(
-                                              image: NetworkImage(e.imgProduct),
-                                              fit: BoxFit.cover)),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(14),
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) => Center(
+                                              child: CircularProgressIndicator(
+                                            color:
+                                                Colors.purple.withOpacity(.5),
+                                          )),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          imageUrl: e.imgProduct,
+                                          height: double.infinity,
+                                          width: double.infinity,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                     Dimens.dp8.height,
                                     Text(

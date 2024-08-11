@@ -92,12 +92,29 @@ class _UserProductSection extends StatelessWidget {
                                           Container(
                                             height: 110,
                                             decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(14),
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        e.imgProduct),
-                                                    fit: BoxFit.cover)),
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              child: CachedNetworkImage(
+                                                placeholder: (context, url) =>
+                                                    Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                  color: Colors.purple
+                                                      .withOpacity(.5),
+                                                )),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                                imageUrl: e.imgProduct,
+                                                height: double.infinity,
+                                                width: double.infinity,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
                                           Dimens.dp8.height,
                                           Text(

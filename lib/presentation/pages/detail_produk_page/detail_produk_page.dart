@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,17 +66,26 @@ class _DetailProdukPageState extends ConsumerState<DetailProdukPage> {
                     Align(
                       alignment: Alignment.topCenter,
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(25),
-                                bottomRight: Radius.circular(25)),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                widget.product.imgProduct,
-                              ),
-                              fit: BoxFit.cover,
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25)),
+                          child: CachedNetworkImage(
+                            placeholder: (context, url) => Center(
+                                child: CircularProgressIndicator(
+                              color: Colors.purple.withOpacity(.5),
                             )),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                            imageUrl: widget.product.imgProduct,
+                            height: double.infinity,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     SafeArea(
